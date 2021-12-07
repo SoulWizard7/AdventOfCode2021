@@ -11,9 +11,403 @@ namespace AdventOfCode2021
     {
         static void Main(string[] args)
         {
-            Day4Puzzle1();
+            Day5Puzzle2();
         }
 
+        private static void Day5Puzzle2()
+        {
+            //string[] lines = System.IO.File.ReadAllLines(@"C:\Users\niklas.hognabba\RiderProjects\AdventOfCode2021\AdventOfCode2021\Day5_Input.txt");
+            string[] lines = System.IO.File.ReadAllLines(@"C:\Users\Mother of Dragons\AdventOfCode2021\AdventOfCode2021\AdventOfCode2021\Day5_Input.txt");
+
+            List<Node> nodes = new List<Node>();
+
+            for (int y = 0; y < 1000; y++)
+            {
+                for (int x = 0; x < 1000; x++)
+                {
+                    nodes.Add(new Node());
+                    int yes = x + (y * 1000);
+                    nodes[yes].x = x;
+                    nodes[yes].y = y;
+                }
+            }
+
+            char[] chars = new char[] { ',', ' ', '-', '>' };
+
+            
+            for (int i = 0; i < lines.Length; i++)
+            {
+                string[] temp = lines[i].Split(chars);
+                List<int> numbers = new List<int>();
+
+                for (int j = 0; j < temp.Length; j++)
+                {
+                    int numVal;
+                    if (int.TryParse(temp[j], out numVal)) numbers.Add(numVal);
+                }
+                //Console.WriteLine(numbers[0] + ", " + numbers[1] + ", " + numbers[2] + ", " + numbers[3]);
+                //Console.WriteLine(numbers.Count);
+
+                int a = 0;
+                int b = 0;
+                int c = 0;
+                int d = 0;                
+
+                if (numbers[0] == numbers[2])
+                {
+                    if (numbers[1] < numbers[3])
+                    {
+                        a = numbers[1];
+                        b = numbers[3];
+                    }
+                    else
+                    {
+                        a = numbers[3];
+                        b = numbers[1];
+                    }
+                    for (int k = 0; k < nodes.Count; k++)
+                    {
+                        if (nodes[k].x == numbers[0])
+                        {
+                            if (nodes[k].y >= a && nodes[k].y <= b)
+                            {
+                                nodes[k].value++;
+                            }
+                        }
+                    }
+                }
+                else if (numbers[1] == numbers[3])
+                {
+                    if (numbers[0] < numbers[2])
+                    {
+                        a = numbers[0];
+                        b = numbers[2];
+                    }
+                    else
+                    {
+                        a = numbers[2];
+                        b = numbers[0];
+                    }
+
+                    for (int k = 0; k < nodes.Count; k++)
+                    {
+                        if (nodes[k].y == numbers[1])
+                        {
+                            if (nodes[k].x >= a && nodes[k].x <= b)
+                            {
+                                nodes[k].value++;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if (numbers[0] < numbers[2])
+                    {
+                        a = numbers[0];
+                        c = numbers[2];
+                    }
+                    else
+                    {
+                        a = numbers[2];
+                        c = numbers[0];
+                    }
+
+                    if (numbers[1] < numbers[3])
+                    {
+                        b = numbers[1];
+                        d = numbers[3];
+                    }
+                    else
+                    {
+                        b = numbers[3];
+                        d = numbers[1];
+                    }
+                    //Console.WriteLine(numbers[0] + ", " + numbers[1] + ", " + numbers[2] + ", " + numbers[3]);
+                    Console.WriteLine("");
+                    Console.WriteLine(a + ", " + b + ", " + c + ", " + d);
+
+                    //Console.WriteLine((numbers[0] - numbers[2]) + ", " + (numbers[1] - numbers[3]));
+                    //Console.WriteLine((a - c) + ", " + (b - d));
+
+                    int myInt = System.Math.Abs(a-c);
+
+                    for (int k = 0; k < nodes.Count; k++)
+                    {
+                        if (nodes[k].x >= a && nodes[k].x <= c && nodes[k].y >= b && nodes[k].y <= d)
+                        {
+                            nodes[k].value++;
+                        }
+                    }
+                }
+            }
+
+
+            int count = 0;
+
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                if (nodes[i].value >= 2)
+                {
+                    count++;
+                }
+            }
+
+            Console.WriteLine("horizontal and vertical lines cross 2 or larger : " + count);
+            Console.WriteLine("press any key to exit");
+            Console.ReadKey();        
+        }
+
+        private static void Day5Puzzle1()
+        {
+            //string[] lines = System.IO.File.ReadAllLines(@"C:\Users\niklas.hognabba\RiderProjects\AdventOfCode2021\AdventOfCode2021\Day5_Input.txt");
+            string[] lines = System.IO.File.ReadAllLines(@"C:\Users\Mother of Dragons\AdventOfCode2021\AdventOfCode2021\AdventOfCode2021\Day5_Input.txt");
+
+            List<Node> nodes = new List<Node>();
+
+            for (int y = 0; y < 1000; y++)
+            {
+                for (int x = 0; x < 1000; x++)
+                {
+                    nodes.Add(new Node());
+                    int yes = x + (y * 1000);
+                    nodes[yes].x = x;
+                    nodes[yes].y = y;
+                }
+            }
+
+            char[] chars = new char[] {',', ' ', '-', '>'};
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                string[] temp = lines[i].Split(chars);
+                List<int> numbers = new List<int>();
+
+                for (int j = 0; j < temp.Length; j++)
+                {
+                    int numVal;
+                    if (int.TryParse(temp[j], out numVal)) numbers.Add(numVal);
+                }
+                //Console.WriteLine(numbers[0] + ", " + numbers[1] + ", " + numbers[2] + ", " + numbers[3]);
+
+                int a = 0;
+                int b = 0;
+                
+                if(numbers[0] == numbers[2])
+                {     
+                    if (numbers[1] < numbers[3]) 
+                    {
+                        a = numbers[1];
+                        b = numbers[3];
+                    }
+                    else
+                    {
+                        a = numbers[3];
+                        b = numbers[1];
+                    }
+                    for (int k = 0; k < nodes.Count; k++)
+                    {
+                        if (nodes[k].x == numbers[0])
+                        {
+                            if(nodes[k].y >= a && nodes[k].y <= b)
+                            {
+                                nodes[k].value++;                                
+                            }
+                        }
+                    }                    
+                }
+
+                if (numbers[1] == numbers[3])
+                {          
+                    if (numbers[0] < numbers[2])
+                    {
+                        a = numbers[0];
+                        b = numbers[2];
+                    }
+                    else
+                    {
+                        a = numbers[2];
+                        b = numbers[0];
+                    }
+
+                    for (int k = 0; k < nodes.Count; k++)
+                    {
+                        if (nodes[k].y == numbers[1])
+                        {
+                            if (nodes[k].x >= a && nodes[k].x <= b)
+                            {
+                                nodes[k].value++;
+                            }
+                        }
+                    }
+                }
+            }
+
+            int count = 0;
+
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                if(nodes[i].value >= 2)
+                {
+                    count++;
+                }
+            }
+
+            Console.WriteLine("horizontal and vertical lines cross 2 or larger : " + count);
+            Console.WriteLine("press any key to exit");
+            Console.ReadKey();
+        }
+
+        private static void Day4Puzzle2()
+        {
+            //string[] lines = System.IO.File.ReadAllLines(@"C:\Users\niklas.hognabba\RiderProjects\AdventOfCode2021\AdventOfCode2021\Day4_BingoNrs.txt");
+            string[] lines = System.IO.File.ReadAllLines(@"C:\Users\Mother of Dragons\AdventOfCode2021\AdventOfCode2021\AdventOfCode2021\Day4_BingoNrs.txt");
+
+            string bingoline = lines[0];
+            char comma = ',';
+            string[] bingoNrs = bingoline.Split(comma);
+            int[] bingoNrsAsInt = new int[bingoNrs.Length];
+            for (int i = 0; i < bingoNrs.Length; i++)
+            {
+                int numVal = Convert.ToInt32(bingoNrs[i]);
+                bingoNrsAsInt[i] = numVal;
+            }
+
+            List<int> tablesNrs = new List<int>();
+
+            char space = ' ';
+
+            for (int i = 1; i < lines.Length; i++)
+            {
+                string[] temp = lines[i].Split(space);
+                for (int j = 0; j < temp.Length; j++)
+                {
+                    int numVal;
+                    if (int.TryParse(temp[j], out numVal)) tablesNrs.Add(numVal);
+                }
+            }
+
+            List<Board> boards = new List<Board>();
+            int add = 0;
+
+            for (int i = 0; i < 100; i++)
+            {
+                Board newBoard = new Board();
+
+                for (int j = 0; j < 25; j++)
+                {
+                    newBoard.nodes.Add(new Node());
+                }
+
+                for (int y = 0; y < 5; y++)
+                {
+                    for (int x = 0; x < 5; x++)
+                    {
+                        int yes = x + (y * 5);
+
+                        newBoard.nodes[yes].x = x;
+                        newBoard.nodes[yes].y = y;
+                        newBoard.nodes[yes].value = tablesNrs[add];
+                        add++;
+                    }
+                }
+
+                boards.Add(newBoard);
+            }
+
+            int unMarked = 0;
+
+            foreach (var nr in bingoNrsAsInt)
+            {
+                for (int board = 0; board < boards.Count; board++)
+                {
+                    for (int node = 0; node < 25; node++) //for each node
+                    {
+                        if (nr == boards[board].nodes[node].value)
+                        {
+                            boards[board].nodes[node].isMarked = true;
+                        }
+                    }
+
+                    int hits = 0;
+
+                    for (int row = 0; row < 5; row++)
+                    {
+                        for (int node = 0; node < 25; node++) //for each node
+                        {
+                            if (boards[board].nodes[node].x == row)
+                            {
+                                if (boards[board].nodes[node].isMarked) hits++;
+                                else
+                                {
+                                    hits = 0;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (hits == 5)
+                        {      
+                            if (boards.Count == 1)
+                            {
+                                Console.WriteLine("winning nr: " + nr);
+
+                                for (int i = 0; i < boards[board].nodes.Count; i++)
+                                {        
+                                    if (!boards[board].nodes[i].isMarked)
+                                    {
+                                        unMarked += boards[board].nodes[i].value;
+                                    }
+                                }
+                                Console.WriteLine("unmarked value: " + unMarked);
+                                Console.ReadKey();
+                            }
+
+                            boards.RemoveAt(board);
+                            board--;
+                            break;                       
+                        }
+                        hits = 0;
+
+
+                        for (int node = 0; node < 25; node++) //for each node
+                        {
+                            if (boards[board].nodes[node].y == row)
+                            {
+                                if (boards[board].nodes[node].isMarked) hits++;
+                                else
+                                {
+                                    hits = 0;
+                                    break;
+                                }
+                            }
+                        }
+                        if (hits == 5)
+                        {
+                            if (boards.Count == 1)
+                            {
+                                Console.WriteLine("winning nr: " + nr);
+
+                                for (int i = 0; i < boards[board].nodes.Count; i++)
+                                {
+                                    if (!boards[board].nodes[i].isMarked)
+                                    {
+                                        unMarked += boards[board].nodes[i].value;
+                                    }
+                                }
+                                Console.WriteLine("unmarked value: " + unMarked);
+                                Console.ReadKey();
+                            }
+
+                            boards.RemoveAt(board);
+                            board--;
+                            break;
+                        }
+                        hits = 0;
+                    }
+                }
+            }
+        }
         private static void Day4Puzzle1()
         {
             string[] lines = System.IO.File.ReadAllLines(@"C:\Users\niklas.hognabba\RiderProjects\AdventOfCode2021\AdventOfCode2021\Day4_BingoNrs.txt");
@@ -153,7 +547,6 @@ namespace AdventOfCode2021
                 iteration++;
             }
         }
-        
         public class Node
         {
             public int x;
