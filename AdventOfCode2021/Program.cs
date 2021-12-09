@@ -11,7 +11,123 @@ namespace AdventOfCode2021
     {
         static void Main(string[] args)
         {
-            Day5Puzzle2();
+            //Day5Puzzle2();
+            Day6Puzzle2();
+            //Day6Puzzle1();
+        }
+
+        private static void Day6Puzzle2()
+        {
+            string line = System.IO.File.ReadAllText(@"C:\Users\Mother of Dragons\AdventOfCode2021\AdventOfCode2021\AdventOfCode2021\Day6_Input.txt");
+            //string line = System.IO.File.ReadAllText(@"C:\Users\niklas.hognabba\RiderProjects\AdventOfCode2021\AdventOfCode2021\Day6_Input.txt");
+
+            char comma = ',';
+            string[] nrs = line.Split(comma);
+            List<int> gen1 = new List<int>();
+
+            Stack<int> fish = new Stack<int>();
+
+            for (int i = 0; i < nrs.Length; i++)
+            {
+                int numVal = Convert.ToInt32(nrs[i]);
+                gen1.Add(numVal);
+            }
+
+            Console.WriteLine(gen1.Count);
+            //Console.ReadKey();
+
+            int answer = 0;
+            int totalFish = 300;
+            
+            int untilBirth = gen1[0];
+            int test2 = 0;
+            
+            int nextFishDays = 0;
+           
+            
+
+            for (int currentFishDays = 256; currentFishDays > 0; currentFishDays--)
+            {
+                for (int i = 0; i < gen1.Count; i++)
+                {
+                    if(gen1[i] == 0)
+                    {
+                        totalFish += ChildFish(currentFishDays, 9);
+                        gen1[i] = 7;
+                        
+                    }
+                    //Console.WriteLine("pling");
+                    gen1[i]--;
+                }
+                Console.WriteLine(currentFishDays);
+            }
+
+            /*
+            
+
+            for (int i = 0; i < 256; i++)
+            {
+                if (testNr1 == 0)
+                {                    
+                    testNr2++;
+                    testNr1 = 7;
+                }
+                testNr1--;
+            }*/
+
+            Console.WriteLine(totalFish);   
+            //Console.WriteLine(answer);
+            //Console.WriteLine(testNr2);
+            Console.ReadKey();
+        }
+
+        public static int ChildFish(int daysLeft, int untilBirth)
+        {
+            int totalFish = 0;
+            int nr = 0;
+            for (int days = daysLeft; days > 0; days--)
+            {
+                if (untilBirth == 0)
+                {
+                    totalFish += ChildFish(days, 7);
+                    untilBirth = 7;
+                }
+
+                untilBirth--;
+            }
+            return totalFish;
+        }
+
+        private static void Day6Puzzle1()
+        {         
+            string line = System.IO.File.ReadAllText(@"C:\Users\Mother of Dragons\AdventOfCode2021\AdventOfCode2021\AdventOfCode2021\Day6_Input.txt");
+            //string line = System.IO.File.ReadAllText(@"C:\Users\niklas.hognabba\RiderProjects\AdventOfCode2021\AdventOfCode2021\Day6_Input.txt");
+
+            char comma = ',';
+            string[] nrs = line.Split(comma);
+            List<int> numbers = new List<int>();
+            for (int i = 0; i < nrs.Length; i++)
+            {
+                int numVal = Convert.ToInt32(nrs[i]);
+                numbers.Add(numVal);
+            }
+
+            for (int i = 0; i < 80; i++)
+            {
+                for (int fish = 0; fish < numbers.Count; fish++)
+                {
+                    if(numbers[fish] == 0)
+                    {
+                        numbers[fish] = 7;
+                        numbers.Add(9);
+                    }
+                    numbers[fish]--;
+                }
+                Console.WriteLine(numbers.Count);
+            }
+
+            Console.WriteLine(numbers.Count);
+            Console.ReadKey();
         }
 
         private static void Day5Puzzle2()
@@ -33,6 +149,14 @@ namespace AdventOfCode2021
             }
 
             char[] chars = new char[] { ',', ' ', '-', '>' };
+
+            List<int> Xnum = new List<int>();
+            List<int> Ynum = new List<int>();
+
+            int testnr1;
+            int testnr2;
+            int testnr3;
+
 
             
             for (int i = 0; i < lines.Length; i++)
@@ -102,45 +226,76 @@ namespace AdventOfCode2021
                 }
                 else
                 {
+                    int myInt = Math.Abs(numbers[0] - numbers[2]);
+                    /*
+                    testnr1 = numbers[0];
+                    testnr2 = numbers[2];
+                    testnr3 = myInt;
+
+                    Console.WriteLine(testnr1);
+                    Console.WriteLine(testnr2);
+                    Console.WriteLine(testnr3);
+
+                    Console.ReadKey();*/
+
+                    //Console.WriteLine(myInt);
+
                     if (numbers[0] < numbers[2])
                     {
-                        a = numbers[0];
-                        c = numbers[2];
+                        for (int num = 0; num < myInt; num++)
+                        {
+                            Xnum.Add(numbers[0] + num);
+                        }
                     }
                     else
                     {
-                        a = numbers[2];
-                        c = numbers[0];
+                        for (int num = 0; num < myInt; num++)
+                        {
+                            Xnum.Add(numbers[2] + num);
+                        }
                     }
 
                     if (numbers[1] < numbers[3])
                     {
-                        b = numbers[1];
-                        d = numbers[3];
+                        for (int num = 0; num < myInt; num++)
+                        {
+                            Ynum.Add(numbers[1] + num);
+                        }
                     }
                     else
                     {
-                        b = numbers[3];
-                        d = numbers[1];
+                        for (int num = 0; num < myInt; num++)
+                        {
+                            Ynum.Add(numbers[3] + num);
+                        }
                     }
                     //Console.WriteLine(numbers[0] + ", " + numbers[1] + ", " + numbers[2] + ", " + numbers[3]);
-                    Console.WriteLine("");
-                    Console.WriteLine(a + ", " + b + ", " + c + ", " + d);
+                    //Console.WriteLine("");
+                    //Console.WriteLine(a + ", " + b + ", " + c + ", " + d);
 
                     //Console.WriteLine((numbers[0] - numbers[2]) + ", " + (numbers[1] - numbers[3]));
                     //Console.WriteLine((a - c) + ", " + (b - d));
 
-                    int myInt = System.Math.Abs(a-c);
-
-                    for (int k = 0; k < nodes.Count; k++)
-                    {
-                        if (nodes[k].x >= a && nodes[k].x <= c && nodes[k].y >= b && nodes[k].y <= d)
-                        {
-                            nodes[k].value++;
-                        }
-                    }
+                    
                 }
             }
+
+            Console.WriteLine(Xnum.Count);
+            Console.WriteLine(Ynum.Count);
+
+
+            for (int blob = 0; blob < Xnum.Count; blob++)
+            {
+                for (int k = 0; k < nodes.Count; k++)
+                {
+                    if (nodes[k].x == Xnum[blob] && nodes[k].y == Ynum[blob])
+                    {
+                        nodes[k].value++;
+                        Console.WriteLine(blob);
+                        break;
+                    }
+                }
+            }            
 
 
             int count = 0;
