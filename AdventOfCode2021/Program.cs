@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Net.Mime;
+using System.Net.WebSockets;
 using System.Numerics;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -11,7 +14,306 @@ namespace AdventOfCode2021
     {
         static void Main(string[] args)
         {
-           Day5Puzzle2();
+            Day8Puzzle2();
+        }
+
+        private static void Day8Puzzle2()
+        {
+            string[] lines = System.IO.File.ReadAllLines(@"C:\Users\niklas.hognabba\RiderProjects\AdventOfCode2021\AdventOfCode2021\Day8_Input.txt");
+            //string[] lines = System.IO.File.ReadAllLines(@"C:\Users\Mother of Dragons\AdventOfCode2021\AdventOfCode2021\AdventOfCode2021\Day8_Input.txt");
+
+            char space = ' ';
+            string separation = " | ";
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                string[] temp1 = lines[i].Split(separation);
+                string[] input = temp1[0].Split(space);
+                string[] output = temp1[1].Split(space);
+                char[] connections = new char[7];
+                
+                BubbleSort(input);
+                
+                Console.WriteLine("input lenght is: " + input.Length);
+                
+                
+                for (int j = 0; j < input.Length; j++)
+                {
+                    Console.WriteLine("." + input[j] + ".");
+                }
+                
+                connections[2] = input[0].Substring(0, 1).GetPinnableReference();
+                connections[5] = input[0].Substring(1, 1).GetPinnableReference();
+                
+                string temp = input[1];
+
+                List<char> c = new List<char>(input[0].ToCharArray());
+                temp = temp.Trim(c[0], c[1]);
+                connections[0] = temp.GetPinnableReference();
+
+                temp = input[2];
+                temp = temp.Trim(c[0], c[1]);
+                List<char> four = new List<char>(temp.ToCharArray());
+                connections[1] = four[0];
+                connections[3] = four[1];
+                
+                
+                
+                temp = input[9];
+                temp = temp.Trim(connections[0], connections[1], connections[2], connections[3], connections[5]);
+                List<char> eight = new List<char>(temp.ToCharArray());
+                connections[4] = eight[0];
+                connections[6] = eight[1];
+                
+                
+                
+
+                for (int j = 0; j < connections.Length; j++)
+                {
+                    Console.Write(connections[j] + ", ");
+                }
+
+                for (int j = 0; j < input.Length; j++)
+                {
+                    // 0
+                    if (input[j].Contains(connections[0]) && 
+                        input[j].Contains(connections[2]) && input[j].Contains(connections[5]) &&
+                        Either(input[j], connections[1], connections[3]) == 1 && 
+                        input[j].Contains(connections[4]) && input[j].Contains(connections[6]))
+                    {
+                        
+                    }
+                    // 1
+                    else if (input[j].Length == 2)
+                    {
+                        Console.WriteLine("this is a two");
+                        
+                        //OutputComparison(output[], input[j]);
+                        string nr = "1";
+                        
+
+                        for (int k = 0; k < output.Length; k++)
+                        {
+                            int count = 0;
+                            if (input[j].Length == output[k].Length)
+                            {
+                                List<char> compare = new List<char>(input[j].ToCharArray());
+
+                                for (int l = 0; l < compare.Count; l++)
+                                {
+                                    if (output[k].Contains(compare[l])) count++;
+                                }
+                            }
+
+                            if (count == output.Length)
+                            {
+                                output[k] = nr;
+                            }
+                        }
+                        
+                    }
+                    // 2
+                    else if (input[j].Contains(connections[0]) && 
+                             Either(input[j], connections[2], connections[5]) == 1 &&
+                             Either(input[j], connections[1], connections[3]) == 1 &&
+                             input[j].Contains(connections[4]) && input[j].Contains(connections[6]))
+                    {
+                        
+                    }
+                    // 3
+                    else if (input[j].Contains(connections[0]) && 
+                             input[j].Contains(connections[2]) && input[j].Contains(connections[5]) &&
+                             Either(input[j], connections[1], connections[3]) == 1 &&
+                             Either(input[j], connections[4], connections[6]) == 1)
+                    {
+                        
+                    }
+                    // 4
+                    else if (input[j].Length == 4)
+                    {
+                        
+                    }
+                    // 5
+                    else if (input[j].Contains(connections[0]) && 
+                             Either(input[j], connections[2], connections[5]) == 1 &&
+                             input[j].Contains(connections[1]) && input[j].Contains(connections[3]) &&
+                             Either(input[j], connections[4], connections[6]) == 1)
+                    {
+                        
+                    }
+                    // 6 
+                    else if (input[j].Contains(connections[0]) && 
+                             Either(input[j], connections[2], connections[5]) == 1 &&
+                             input[j].Contains(connections[1]) && input[j].Contains(connections[3]) && 
+                             input[j].Contains(connections[4]) && input[j].Contains(connections[6]))
+                    {
+                        
+                    }
+                    // 7
+                    else if (input[j].Length == 3)
+                    {
+                        
+                    }
+                    // 8
+                    else if (input[j].Length == 7)
+                    {
+                        
+                    }
+                    // 9
+                    else if (input[j].Contains(connections[0]) && 
+                             input[j].Contains(connections[2]) && input[j].Contains(connections[5]) &&
+                             input[j].Contains(connections[1]) && input[j].Contains(connections[3]) &&
+                             Either(input[j], connections[4], connections[6]) == 1)
+                    {
+                        
+                    }
+                    else { Console.WriteLine("somethings wrong with:" + input[j]); }
+                }
+                
+                for (int j = 0; j < output.Length; j++)
+                {
+                    Console.WriteLine(output[j]);
+                }
+                Console.ReadKey();
+            }
+            //Console.WriteLine("count: " + count);
+        }
+
+        public static void OutputComparison(string[] output, string input)
+        {
+            
+        }
+
+        public static int Either(string input, char index1, char index2)
+        {
+            int value = 0;
+            if (input.Contains(index1)) value++;
+            if (input.Contains(index2)) value++;
+            return value;  
+        }
+
+        private static void Day8Puzzle1()
+        {
+            string[] lines = System.IO.File.ReadAllLines(@"C:\Users\niklas.hognabba\RiderProjects\AdventOfCode2021\AdventOfCode2021\Day8_Input.txt");
+            //string[] lines = System.IO.File.ReadAllLines(@"C:\Users\Mother of Dragons\AdventOfCode2021\AdventOfCode2021\AdventOfCode2021\Day8_Input.txt");
+
+            List<string> numbers = new List<string>();
+            char[] Chars = { ' ', '|'};
+            char line = '|';
+            char space = ' ';
+
+            int count = 0;
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                string[] temp = lines[i].Split(line);
+                string[] other = temp[1].Split(space);
+
+                for (int j = 0; j < other.Length; j++)
+                {
+                    other[j] = other[j].Trim();
+                    Console.WriteLine("." + other[j] + ".");
+                    
+                    if (other[j].Length == 2 || other[j].Length == 4 || other[j].Length == 3 ||
+                        other[j].Length == 7) count++;
+                }
+            }
+            
+            Console.WriteLine("count: " + count);
+            
+        }
+
+        private static void Day7Puzzle2()
+        {
+            //string line = System.IO.File.ReadAllText(@"C:\Users\Mother of Dragons\AdventOfCode2021\AdventOfCode2021\AdventOfCode2021\Day7_Input.txt");
+            string line = System.IO.File.ReadAllText(@"C:\Users\niklas.hognabba\RiderProjects\AdventOfCode2021\AdventOfCode2021\Day7_Input.txt");
+            
+            char comma = ',';
+            string[] nrs = line.Split(comma);
+            List<int> startingPos = new List<int>();
+
+            for (int i = 0; i < nrs.Length; i++)
+            {
+                int numVal = Convert.ToInt32(nrs[i]);
+                startingPos.Add(numVal);
+            }
+
+            int cheapestOutcome = int.MaxValue;
+
+            for (int i = 0; i < 1000; i++)
+            {
+                int currentFuelIteration = 0;
+                
+                for (int j = 0; j < startingPos.Count; j++)
+                {
+                    if (startingPos[j] != i)
+                    {
+                        int distance = Math.Abs(startingPos[j] - i);
+                        int increase = 0;
+
+                        while (distance != 0) 
+                        {
+                            currentFuelIteration += (increase + 1);
+                            increase++;
+                            distance--;
+                        }
+                    }
+                }
+                if (currentFuelIteration < cheapestOutcome) cheapestOutcome = currentFuelIteration;
+            }
+            Console.WriteLine("cheapest outcome: " + cheapestOutcome);
+        }
+
+        private static void Day7Puzzle1()
+        {
+            //string line = System.IO.File.ReadAllText(@"C:\Users\Mother of Dragons\AdventOfCode2021\AdventOfCode2021\AdventOfCode2021\Day7_Input.txt");
+            string line = System.IO.File.ReadAllText(@"C:\Users\niklas.hognabba\RiderProjects\AdventOfCode2021\AdventOfCode2021\Day7_Input.txt");
+            
+            char comma = ',';
+            string[] nrs = line.Split(comma);
+            List<int> startingPos = new List<int>();
+
+            for (int i = 0; i < nrs.Length; i++)
+            {
+                int numVal = Convert.ToInt32(nrs[i]);
+                startingPos.Add(numVal);
+            }
+
+            int cheapestOutcome = int.MaxValue;
+
+            for (int i = 0; i < 1000; i++)
+            {
+                int currentFuelIteration = 0;
+                
+                for (int j = 0; j < startingPos.Count; j++)
+                {
+                    if (startingPos[j] != i)
+                    {
+                        currentFuelIteration += Math.Abs(startingPos[j] - i);
+                    }
+                }
+                if (currentFuelIteration < cheapestOutcome) cheapestOutcome = currentFuelIteration;
+            }
+            Console.WriteLine("cheapest outcome: " + cheapestOutcome);
+        }
+        
+        static void BubbleSort(string[] data)
+        {
+            bool needsSorting = true;
+            for (int i = 0; i < data.Length - 1 && needsSorting; i++)
+            {
+                needsSorting = false;
+                for (int j = 0; j < data.Length - 1 - i; j++)
+                {
+                    if (data[j].Length > data[j + 1].Length)
+                    {
+                        needsSorting = true;
+                        string tmp = data[j +1];
+                        data[j + 1] = data[j];
+                        data[j] = tmp;
+                    }
+                }
+            }
         }
 
         private static void Day6Puzzle2()
