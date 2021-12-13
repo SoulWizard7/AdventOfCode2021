@@ -1,77 +1,502 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Net.Mime;
-using System.Net.WebSockets;
 using System.Numerics;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace AdventOfCode2021
 {
+    public static class Extensions
+    {
+        public static string Filter(this string str, List<char> charsToRemove)
+        {
+            charsToRemove.ForEach(c => str = str.Replace(c.ToString(), String.Empty));
+            return str;
+        }
+
+        public static string OutputComparison(string output, string input, string nr)
+        {
+            string temp = output;
+            int count = 0;
+            if (input.Length == output.Length)
+            {
+                List<char> compare = new List<char>(input.ToCharArray());
+
+                for (int l = 0; l < compare.Count; l++)
+                {
+                    if (output.Contains(compare[l])) count++;
+                }
+                //Console.WriteLine(count);
+                if (count == output.Length)
+                {
+                    return nr;
+                }
+                else return temp;
+            }
+            return temp;
+            
+        }
+    }
+
     class Program
     {
         static void Main(string[] args)
         {
-            Day8Puzzle2();
+            Day12Puzzle1();
+        }
+
+        private static void Day12Puzzle1()
+        {
+            //string[] lines = System.IO.File.ReadAllLines(@"C:\Users\niklas.hognabba\RiderProjects\AdventOfCode2021\AdventOfCode2021\Day12_Input.txt");
+            string[] lines = System.IO.File.ReadAllLines(@"C:\Users\Mother of Dragons\AdventOfCode2021\AdventOfCode2021\AdventOfCode2021\Day12_Input.txt");
+
+
+
+        }
+
+        private static void Day11Puzzle2()
+        {
+            //string[] lines = System.IO.File.ReadAllLines(@"C:\Users\niklas.hognabba\RiderProjects\AdventOfCode2021\AdventOfCode2021\Day11_Input.txt");
+            string[] lines = System.IO.File.ReadAllLines(@"C:\Users\Mother of Dragons\AdventOfCode2021\AdventOfCode2021\AdventOfCode2021\Day11_Input.txt");
+
+            int[,] grid = new int[10, 10];
+
+            for (int x = 0; x < 10; x++)
+            {
+                for (int y = 0; y < 10; y++)
+                {
+                    grid[x, y] = Convert.ToInt32(lines[x].Substring(y, 1));
+                }
+            }
+
+            int stepNr = 1;
+
+            for (int i = 0; i < stepNr; i++)
+            {
+                for (int x = 0; x < 10; x++)
+                {
+                    for (int y = 0; y < 10; y++)
+                    {
+                        grid[x, y] += 1;
+                    }
+                }
+
+                List<(int, int)> gridPos = new List<(int, int)>();
+                int iteration = 2;
+
+                for (int j = 0; j < iteration; j++)
+                {
+                    for (int x = 0; x < 10; x++)
+                    {
+                        for (int y = 0; y < 10; y++)
+                        {
+                            if (grid[x, y] > 9)
+                            {
+                                var gridValue = (x, y);
+                                if (!gridPos.Contains(gridValue))
+                                {
+                                    gridPos.Add(gridValue);
+                                    iteration++;
+
+                                    if (x - 1 >= 0 && y - 1 >= 0) grid[x - 1, y - 1]++;
+                                    if (y - 1 >= 0) grid[x, y - 1]++;
+                                    if (y - 1 >= 0 && x + 1 < 10) grid[x + 1, y - 1]++;
+
+                                    if (x - 1 >= 0) grid[x - 1, y]++;
+                                    if (x + 1 < 10) grid[x + 1, y]++;
+
+                                    if (x - 1 >= 0 && y + 1 < 10) grid[x - 1, y + 1]++;
+                                    if (y + 1 < 10) grid[x, y + 1]++;
+                                    if (x + 1 < 10 && y + 1 < 10) grid[x + 1, y + 1]++;
+                                }
+                            }
+                        }
+                    }
+                }
+                for (int x = 0; x < 10; x++)
+                {
+                    for (int y = 0; y < 10; y++)
+                    {
+                        if (grid[x, y] > 9)
+                        {
+                            grid[x, y] = 0;
+                        }
+                    }
+                }
+
+                if (gridPos.Count == 100)
+                {                    
+                    Console.WriteLine("step: " + stepNr);
+                    Console.WriteLine("");
+                }
+                else stepNr++;
+                //end of loop
+            }
+        }
+
+        private static void Day11Puzzle1()
+        {
+            //string[] lines = System.IO.File.ReadAllLines(@"C:\Users\niklas.hognabba\RiderProjects\AdventOfCode2021\AdventOfCode2021\Day11_Input.txt");
+            string[] lines = System.IO.File.ReadAllLines(@"C:\Users\Mother of Dragons\AdventOfCode2021\AdventOfCode2021\AdventOfCode2021\Day11_Input.txt");
+
+            int[,] grid = new int[10, 10];
+
+            int flashes = 0;
+
+            for (int x = 0; x < 10; x++)
+            {
+                for (int y = 0; y < 10; y++)
+                {
+                    grid[x, y] = Convert.ToInt32(lines[x].Substring(y, 1));
+                }
+            }
+
+            for (int i = 0; i < 100; i++)
+            {
+                for (int x = 0; x < 10; x++)
+                {
+                    for (int y = 0; y < 10; y++)
+                    {
+                        grid[x, y] += 1;
+                    }
+                }
+
+                List<(int, int)> gridPos = new List<(int, int)>();
+                int iteration = 2;
+
+                for (int j = 0; j < iteration; j++)
+                {
+                    for (int x = 0; x < 10; x++)
+                    {
+                        for (int y = 0; y < 10; y++)
+                        {
+                            if (grid[x, y] > 9)
+                            {
+                                var gridValue = (x, y);
+                                if (!gridPos.Contains(gridValue))
+                                {
+                                    gridPos.Add(gridValue);
+                                    iteration++;
+
+                                    if (x - 1 >= 0 && y - 1 >= 0)       grid[x - 1, y - 1]++;
+                                    if (y - 1 >= 0)                     grid[x, y - 1]++;
+                                    if (y - 1 >= 0 && x + 1 < 10)       grid[x + 1, y - 1]++;
+
+                                    if (x - 1 >= 0)                     grid[x - 1, y]++;
+                                    if (x + 1 < 10)                     grid[x + 1, y]++;
+
+                                    if (x - 1 >= 0 && y + 1 < 10)       grid[x - 1, y + 1]++;
+                                    if (y + 1 < 10)                     grid[x, y + 1]++;
+                                    if (x + 1 < 10 && y + 1 < 10)       grid[x + 1, y + 1]++;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                for (int x = 0; x < 10; x++)
+                {
+                    for (int y = 0; y < 10; y++)
+                    {
+                        if (grid[x, y] > 9)
+                        {
+                            grid[x, y] = 0;
+                        }
+                    }
+                }
+                flashes += gridPos.Count;
+                //end of loop
+            }
+            Console.WriteLine("total flashes: " + flashes);
+        }
+
+        private static void Day9Puzzle2()
+        {
+            //string[] lines = System.IO.File.ReadAllLines(@"C:\Users\niklas.hognabba\RiderProjects\AdventOfCode2021\AdventOfCode2021\Day9_Input.txt");
+            string[] lines = System.IO.File.ReadAllLines(@"C:\Users\Mother of Dragons\AdventOfCode2021\AdventOfCode2021\AdventOfCode2021\Day9_Input.txt");
+
+            int columnLenght = 0;
+            for (int i = 0; i < lines[0].Length; i++)
+            {
+                columnLenght++;
+            }
+
+            int[,] grid = new int[lines.Length, columnLenght];
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                for (int j = 0; j < columnLenght; j++)
+                {  
+                    grid[i,j] = Convert.ToInt32(lines[i].Substring(j, 1));
+                }
+            }
+
+            List<int> basins = new List<int>();
+
+            int endResult = 0;
+
+            for (int i = 0; i < lines.Length; i++)
+            {                
+                for (int j = 0; j < columnLenght; j++)
+                {
+                    int hits = 0;
+                    int duds = 0;
+                    if (i - 1 >= 0)
+                    {
+                        if (grid[i, j] < grid[i - 1, j]) hits++;
+                    }
+                    else duds++;
+
+                    if (i + 1 < lines.Length)
+                    {
+                        if (grid[i, j] < grid[i + 1, j]) hits++;
+                    }
+                    else duds++;
+
+                    if (j - 1 >= 0)
+                    {
+                        if (grid[i, j] < grid[i, j - 1]) hits++;
+                    }
+                    else duds++;
+
+                    if (j + 1 < columnLenght)
+                    {
+                        if (grid[i, j] < grid[i, j + 1]) hits++;
+                    }
+                    else duds++;
+
+                    if (hits == 4 - duds) 
+                    {
+                        Console.WriteLine("grid low point: " + i + "," + j + " at value: " + grid[i, j]);
+
+                        List<(int, int)> gridPos = new List<(int, int)>();
+
+                        Search(grid, i, j);
+
+                        void Search(int[,] grid, int x, int y)
+                        {
+                            if (x - 1 >= 0)
+                            {
+                                if (grid[x - 1, y] != 9)
+                                {
+                                    var gridValue = (x - 1, y);
+                                    if (!gridPos.Contains(gridValue))
+                                    {
+                                        gridPos.Add(gridValue);
+                                        Search(grid, x-1, y);
+                                    }
+                                }
+                            }
+
+                            if (x + 1 < lines.Length)
+                            {
+                                if (grid[x + 1, y] != 9)
+                                {
+                                    var gridValue = (x + 1, y);
+                                    if (!gridPos.Contains(gridValue))
+                                    {
+                                        gridPos.Add(gridValue);
+                                        Search(grid, x + 1, y);
+                                    }
+                                }
+                            }
+
+                            if (y - 1 >= 0)
+                            {
+                                if (grid[x, y - 1] != 9)
+                                {
+                                    var gridValue = (x, y - 1);
+                                    if (!gridPos.Contains(gridValue))
+                                    {
+                                        gridPos.Add(gridValue);
+                                        Search(grid, x, y - 1);
+                                    }
+                                }
+                            }
+
+                            if (y + 1 < columnLenght)
+                            {
+                                if (grid[x, y + 1] != 9)
+                                {
+                                    var gridValue = (x, y + 1);
+                                    if (!gridPos.Contains(gridValue))
+                                    {
+                                        gridPos.Add(gridValue);
+                                        Search(grid, x, y + 1);
+                                    }
+                                }
+                            }
+                        }
+
+                        basins.Add(gridPos.Count);
+
+                    }   
+                }                
+            }
+
+            BubbleSort(basins);
+
+            for (int i = 0; i < basins.Count; i++)
+            {
+                Console.WriteLine(basins[i]);
+            }
+
+            //endResult = basins[basins.Count] + basins[basins.Count - 1] + basins[basins.Count - 2];
+
+            Console.WriteLine("End Result: " + endResult);
+            Console.ReadKey();
+        }
+
+        static void BubbleSort(List<int> data)
+        {
+            bool needsSorting = true;
+            for (int i = 0; i < data.Count - 1 && needsSorting; i++)
+            {
+                needsSorting = false;
+                for (int j = 0; j < data.Count - 1 - i; j++)
+                {
+                    if (data[j] > data[j + 1])
+                    {
+                        needsSorting = true;
+                        int tmp = data[j + 1];
+                        data[j + 1] = data[j];
+                        data[j] = tmp;
+                    }
+                }
+            }
+        }
+
+
+        private static void Day9Puzzle1()
+        {
+            //string[] lines = System.IO.File.ReadAllLines(@"C:\Users\niklas.hognabba\RiderProjects\AdventOfCode2021\AdventOfCode2021\Day9_Input.txt");
+            string[] lines = System.IO.File.ReadAllLines(@"C:\Users\Mother of Dragons\AdventOfCode2021\AdventOfCode2021\AdventOfCode2021\Day9_Input.txt");
+
+            int columnLenght = 0;
+            for (int i = 0; i < lines[0].Length; i++)
+            {
+                columnLenght++;
+            }
+
+            int[,] grid = new int[lines.Length, columnLenght];
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                for (int j = 0; j < columnLenght; j++)
+                {                    
+                    int y = Convert.ToInt32(lines[i].Substring(j, 1)); 
+                    grid[i,j] = y;
+                }
+            }
+
+            int endResult = 0;
+
+            for (int i = 0; i < lines.Length; i++)
+            {                
+                for (int j = 0; j < columnLenght; j++)
+                {
+                    int hits = 0;
+                    int duds = 0;
+                    if (i - 1 >= 0)
+                    {
+                        if (grid[i, j] < grid[i - 1, j]) hits++;
+                    }
+                    else duds++;
+
+                    if (i + 1 < lines.Length)
+                    {
+                        if (grid[i, j] < grid[i + 1, j]) hits++;
+                    }
+                    else duds++;
+
+                    if (j - 1 >= 0)
+                    {
+                        if (grid[i, j] < grid[i, j - 1]) hits++;
+                    }
+                    else duds++;
+
+                    if (j + 1 < columnLenght)
+                    {
+                        if (grid[i, j] < grid[i, j + 1]) hits++;
+                    }
+                    else duds++;
+
+                    if (hits == 4 - duds) 
+                    {
+                        Console.WriteLine("grid low point: " + i + "," + j + " at value: " + grid[i, j]);
+                        endResult += (grid[i, j] + 1); 
+                    }   
+                }                
+            }           
+
+            Console.WriteLine("End Result: " + endResult);
+            Console.ReadKey();
+
+            /*
+            for (int i = 0; i < lines.Length; i++)
+            {
+                for (int j = 0; j < columnLenght; j++)
+                {
+                    Console.Write(grid[i, j]);
+                }
+                Console.WriteLine("");
+                Console.ReadKey();
+            }*/
         }
 
         private static void Day8Puzzle2()
         {
-            string[] lines = System.IO.File.ReadAllLines(@"C:\Users\niklas.hognabba\RiderProjects\AdventOfCode2021\AdventOfCode2021\Day8_Input.txt");
-            //string[] lines = System.IO.File.ReadAllLines(@"C:\Users\Mother of Dragons\AdventOfCode2021\AdventOfCode2021\AdventOfCode2021\Day8_Input.txt");
+            //string[] lines = System.IO.File.ReadAllLines(@"C:\Users\niklas.hognabba\RiderProjects\AdventOfCode2021\AdventOfCode2021\Day8_Input.txt");
+            string[] lines = System.IO.File.ReadAllLines(@"C:\Users\Mother of Dragons\AdventOfCode2021\AdventOfCode2021\AdventOfCode2021\Day8_Input.txt");
+            List<int> numbers = new List<int>();
+            
 
             char space = ' ';
             string separation = " | ";
 
             for (int i = 0; i < lines.Length; i++)
             {
+                //string[] temp1 = lines[i].Split(separation);
                 string[] temp1 = lines[i].Split(separation);
                 string[] input = temp1[0].Split(space);
                 string[] output = temp1[1].Split(space);
                 char[] connections = new char[7];
-                
-                BubbleSort(input);
-                
-                Console.WriteLine("input lenght is: " + input.Length);
-                
-                
+                for (int j = 0; j < connections.Length; j++)
+                {
+                    connections[j] = 'x';
+                }
+
+                BubbleSortStringLenght(input);
+
                 for (int j = 0; j < input.Length; j++)
                 {
-                    Console.WriteLine("." + input[j] + ".");
+                    //Console.WriteLine("." + input[j] + ".");
                 }
                 
-                connections[2] = input[0].Substring(0, 1).GetPinnableReference();
-                connections[5] = input[0].Substring(1, 1).GetPinnableReference();
-                
+                //one
+                List<char> one = new List<char>(input[0].ToCharArray());
+                connections[2] = one[0];
+                connections[5] = one[1];
+
+                // seven
                 string temp = input[1];
+                temp = temp.Trim(one[1], one[0]);
+                List<char> seven = new List<char>(temp.ToCharArray());
+                connections[0] = seven[0];
 
-                List<char> c = new List<char>(input[0].ToCharArray());
-                temp = temp.Trim(c[0], c[1]);
-                connections[0] = temp.GetPinnableReference();
-
+                // four                
                 temp = input[2];
-                temp = temp.Trim(c[0], c[1]);
-                List<char> four = new List<char>(temp.ToCharArray());
+                temp = Extensions.Filter(temp, one);      
+                List<char> four = new List<char>(temp.ToCharArray());  
                 connections[1] = four[0];
                 connections[3] = four[1];
-                
-                
-                
+
+                // eight
                 temp = input[9];
-                temp = temp.Trim(connections[0], connections[1], connections[2], connections[3], connections[5]);
+                List<char> charsToRemove = new List<char> { connections[0], connections[1], connections[2], connections[3], connections[5] };
+                temp = Extensions.Filter(temp, charsToRemove);
                 List<char> eight = new List<char>(temp.ToCharArray());
                 connections[4] = eight[0];
                 connections[6] = eight[1];
-                
-                
-                
-
-                for (int j = 0; j < connections.Length; j++)
-                {
-                    Console.Write(connections[j] + ", ");
-                }
 
                 for (int j = 0; j < input.Length; j++)
                 {
@@ -81,36 +506,22 @@ namespace AdventOfCode2021
                         Either(input[j], connections[1], connections[3]) == 1 && 
                         input[j].Contains(connections[4]) && input[j].Contains(connections[6]))
                     {
-                        
+                        string nr = "0";
+
+                        for (int k = 0; k < 4; k++)
+                        {
+                            output[k] = Extensions.OutputComparison(output[k], input[j], nr);
+                        }
                     }
                     // 1
                     else if (input[j].Length == 2)
                     {
-                        Console.WriteLine("this is a two");
-                        
-                        //OutputComparison(output[], input[j]);
-                        string nr = "1";
-                        
+                        string nr = "1";                        
 
-                        for (int k = 0; k < output.Length; k++)
+                        for (int k = 0; k < 4; k++)
                         {
-                            int count = 0;
-                            if (input[j].Length == output[k].Length)
-                            {
-                                List<char> compare = new List<char>(input[j].ToCharArray());
-
-                                for (int l = 0; l < compare.Count; l++)
-                                {
-                                    if (output[k].Contains(compare[l])) count++;
-                                }
-                            }
-
-                            if (count == output.Length)
-                            {
-                                output[k] = nr;
-                            }
+                            output[k] = Extensions.OutputComparison(output[k], input[j], nr);
                         }
-                        
                     }
                     // 2
                     else if (input[j].Contains(connections[0]) && 
@@ -118,7 +529,12 @@ namespace AdventOfCode2021
                              Either(input[j], connections[1], connections[3]) == 1 &&
                              input[j].Contains(connections[4]) && input[j].Contains(connections[6]))
                     {
-                        
+                        string nr = "2";
+
+                        for (int k = 0; k < 4; k++)
+                        {
+                            output[k] = Extensions.OutputComparison(output[k], input[j], nr);
+                        }
                     }
                     // 3
                     else if (input[j].Contains(connections[0]) && 
@@ -126,12 +542,22 @@ namespace AdventOfCode2021
                              Either(input[j], connections[1], connections[3]) == 1 &&
                              Either(input[j], connections[4], connections[6]) == 1)
                     {
-                        
+                        string nr = "3";
+
+                        for (int k = 0; k < 4; k++)
+                        {
+                            output[k] = Extensions.OutputComparison(output[k], input[j], nr);
+                        }
                     }
                     // 4
                     else if (input[j].Length == 4)
                     {
-                        
+                        string nr = "4";
+
+                        for (int k = 0; k < 4; k++)
+                        {
+                            output[k] = Extensions.OutputComparison(output[k], input[j], nr);
+                        }
                     }
                     // 5
                     else if (input[j].Contains(connections[0]) && 
@@ -139,7 +565,12 @@ namespace AdventOfCode2021
                              input[j].Contains(connections[1]) && input[j].Contains(connections[3]) &&
                              Either(input[j], connections[4], connections[6]) == 1)
                     {
-                        
+                        string nr = "5";
+
+                        for (int k = 0; k < 4; k++)
+                        {
+                            output[k] = Extensions.OutputComparison(output[k], input[j], nr);
+                        }
                     }
                     // 6 
                     else if (input[j].Contains(connections[0]) && 
@@ -147,17 +578,32 @@ namespace AdventOfCode2021
                              input[j].Contains(connections[1]) && input[j].Contains(connections[3]) && 
                              input[j].Contains(connections[4]) && input[j].Contains(connections[6]))
                     {
-                        
+                        string nr = "6";
+
+                        for (int k = 0; k < 4; k++)
+                        {
+                            output[k] = Extensions.OutputComparison(output[k], input[j], nr);
+                        }
                     }
                     // 7
                     else if (input[j].Length == 3)
                     {
-                        
+                        string nr = "7";
+
+                        for (int k = 0; k < 4; k++)
+                        {
+                            output[k] = Extensions.OutputComparison(output[k], input[j], nr);
+                        }
                     }
                     // 8
                     else if (input[j].Length == 7)
                     {
-                        
+                        string nr = "8";
+
+                        for (int k = 0; k < 4; k++)
+                        {
+                            output[k] = Extensions.OutputComparison(output[k], input[j], nr);
+                        }
                     }
                     // 9
                     else if (input[j].Contains(connections[0]) && 
@@ -165,23 +611,37 @@ namespace AdventOfCode2021
                              input[j].Contains(connections[1]) && input[j].Contains(connections[3]) &&
                              Either(input[j], connections[4], connections[6]) == 1)
                     {
-                        
+                        string nr = "9";
+
+                        for (int k = 0; k < 4; k++)
+                        {
+                            output[k] = Extensions.OutputComparison(output[k], input[j], nr);
+                        }
                     }
                     else { Console.WriteLine("somethings wrong with:" + input[j]); }
                 }
+
+                string stringOfNrs = output[0] + output[1] + output[2] + output[3];
                 
                 for (int j = 0; j < output.Length; j++)
                 {
                     Console.WriteLine(output[j]);
+                    //stringOfNrs = stringOfNrs.Insert(j, output[j]); 
                 }
-                Console.ReadKey();
-            }
-            //Console.WriteLine("count: " + count);
-        }
+                
+                int numVal = Convert.ToInt32(stringOfNrs);
+                numbers.Add(numVal);
 
-        public static void OutputComparison(string[] output, string input)
-        {
-            
+                //Console.ReadKey();
+            }
+
+            int count = 0;
+            for (int i = 0; i < numbers.Count; i++)
+            {
+                count += numbers[i];
+            }
+
+            Console.WriteLine("count: " + count);
         }
 
         public static int Either(string input, char index1, char index2)
@@ -222,7 +682,6 @@ namespace AdventOfCode2021
             Console.WriteLine("count: " + count);
             
         }
-
         private static void Day7Puzzle2()
         {
             //string line = System.IO.File.ReadAllText(@"C:\Users\Mother of Dragons\AdventOfCode2021\AdventOfCode2021\AdventOfCode2021\Day7_Input.txt");
@@ -263,7 +722,6 @@ namespace AdventOfCode2021
             }
             Console.WriteLine("cheapest outcome: " + cheapestOutcome);
         }
-
         private static void Day7Puzzle1()
         {
             //string line = System.IO.File.ReadAllText(@"C:\Users\Mother of Dragons\AdventOfCode2021\AdventOfCode2021\AdventOfCode2021\Day7_Input.txt");
@@ -295,9 +753,8 @@ namespace AdventOfCode2021
                 if (currentFuelIteration < cheapestOutcome) cheapestOutcome = currentFuelIteration;
             }
             Console.WriteLine("cheapest outcome: " + cheapestOutcome);
-        }
-        
-        static void BubbleSort(string[] data)
+        }        
+        static void BubbleSortStringLenght(string[] data)
         {
             bool needsSorting = true;
             for (int i = 0; i < data.Length - 1 && needsSorting; i++)
@@ -315,7 +772,6 @@ namespace AdventOfCode2021
                 }
             }
         }
-
         private static void Day6Puzzle2()
         {
             //string line = System.IO.File.ReadAllText(@"C:\Users\Mother of Dragons\AdventOfCode2021\AdventOfCode2021\AdventOfCode2021\Day6_Input.txt");
@@ -370,7 +826,6 @@ namespace AdventOfCode2021
             Console.WriteLine(totalFish);   
             Console.ReadKey();
         }
-
         private static void Day6Puzzle1()
         {         
             string line = System.IO.File.ReadAllText(@"C:\Users\Mother of Dragons\AdventOfCode2021\AdventOfCode2021\AdventOfCode2021\Day6_Input.txt");
@@ -402,7 +857,6 @@ namespace AdventOfCode2021
             Console.WriteLine(numbers.Count);
             Console.ReadKey();
         }
-
         private static void Day5Puzzle2()
         {
             string[] lines = System.IO.File.ReadAllLines(@"C:\Users\niklas.hognabba\RiderProjects\AdventOfCode2021\AdventOfCode2021\Day5_Input.txt");
@@ -573,7 +1027,6 @@ namespace AdventOfCode2021
             Console.WriteLine("press any key to exit");
             Console.ReadKey();        
         }
-
         private static void Day5Puzzle1()
         {
             //string[] lines = System.IO.File.ReadAllLines(@"C:\Users\niklas.hognabba\RiderProjects\AdventOfCode2021\AdventOfCode2021\Day5_Input.txt");
@@ -673,7 +1126,6 @@ namespace AdventOfCode2021
             Console.WriteLine("press any key to exit");
             Console.ReadKey();
         }
-
         private static void Day4Puzzle2()
         {
             //string[] lines = System.IO.File.ReadAllLines(@"C:\Users\niklas.hognabba\RiderProjects\AdventOfCode2021\AdventOfCode2021\Day4_BingoNrs.txt");
@@ -969,13 +1421,11 @@ namespace AdventOfCode2021
             public int y;
             public int value;
             public bool isMarked;
-        }
-        
+        }        
         public class Board
         {
             public List<Node> nodes = new List<Node>();
         }
-
         private static void Day3Puzzle2()
         {
             string[] lines = System.IO.File.ReadAllLines(@"C:\Users\niklas.hognabba\RiderProjects\AdventOfCode2021\AdventOfCode2021\Day3_input.txt");
