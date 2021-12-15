@@ -41,9 +41,155 @@ namespace AdventOfCode2021
     {
         static void Main(string[] args)
         {
-            Day12Puzzle1();
+            Day14Puzzle1();
         }
 
+        private static void Day14Puzzle1()
+        {
+            //string[] lines = System.IO.File.ReadAllLines(@"C:\Users\niklas.hognabba\RiderProjects\AdventOfCode2021\AdventOfCode2021\Day14_Input.txt");
+            string[] lines = System.IO.File.ReadAllLines(@"C:\Users\Mother of Dragons\AdventOfCode2021\AdventOfCode2021\AdventOfCode2021\Day14_Input.txt");
+
+            string polymerTemplate = lines[0];
+            List<string> rules = new List<string>();
+
+            for (int i = 2; i < lines.Length; i++)
+            {
+                rules.Add(lines[i]);
+            }
+            
+            
+            
+            
+        }
+
+        private static void Day13()
+        {
+            string[] linesX = System.IO.File.ReadAllLines(@"C:\Users\niklas.hognabba\RiderProjects\AdventOfCodePart2\AdventOfCodePart2\Day13_Input.txt");
+            //string[] lines = System.IO.File.ReadAllLines(@"C:\Users\Mother of Dragons\AdventOfCode2021\AdventOfCode2021\AdventOfCode2021\Day13_Input.txt");
+
+            string[] lines = new string[983];
+
+            for (int i = 0; i < 983; i++)
+            {
+                lines[i] = linesX[i];
+            }
+
+            bool[,] paper = new bool[1310, 1310];
+            
+            string separation = ",";
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                string[] temp = lines[i].Split(separation);
+                int x = Convert.ToInt32(temp[0]);
+                int y = Convert.ToInt32(temp[1]);
+
+                paper[x, y] = true;
+            }
+
+            int[] xFolds = {655, 327, 163, 81, 40};
+            int[] yFolds = {447, 223, 111, 55, 27};
+
+            /* PUZZLE 1 !!!
+             
+            for (int x = 0; x < 1310; x++)
+            {
+                for (int y = 0; y < 1310; y++)
+                {
+                    if (paper[x, y])
+                    {
+                        if (x > 655)
+                        {
+                            int decrece = x - 655;
+                            paper[655 - decrece, y] = true;
+                            paper[x, y] = false;
+                            
+                        }
+                    }
+                }
+            }*/
+            
+            for (int i = 0; i < xFolds.Length; i++)
+            {
+                for (int x = 0; x < 1310; x++)
+                {
+                    for (int y = 0; y < 1310; y++)
+                    {
+                        if (paper[x, y])
+                        {
+                            if (x > xFolds[i])
+                            {
+                                int decrece = x - xFolds[i];
+                                paper[xFolds[i] - decrece, y] = true;
+                                paper[x, y] = false;
+                            
+                            }
+                        }
+                    }
+                }
+            
+                for (int x = 0; x < 1310; x++)
+                {
+                    for (int y = 0; y < 1310; y++)
+                    {
+                        if (paper[x, y])
+                        {
+                            if (y > yFolds[i])
+                            {
+                                int decrece = y - yFolds[i];
+                                paper[x, yFolds[i] - decrece] = true;
+                                paper[x, y] = false;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            for (int x = 0; x < 1310; x++)
+            {
+                for (int y = 0; y < 1310; y++)
+                {
+                    if (paper[x, y])
+                    {
+                        if (y > 13)
+                        {
+                            int decrece = y - 13;
+                            paper[x, 13 - decrece] = true;
+                            paper[x, y] = false;
+                        }
+                    }
+                }
+            }
+            
+            for (int x = 0; x < 1310; x++)
+            {
+                for (int y = 0; y < 1310; y++)
+                {
+                    if (paper[x, y])
+                    {
+                        if (y > 6)
+                        {
+                            int decrece = y - 6;
+                            paper[x, 6 - decrece] = true;
+                            paper[x, y] = false;
+                        }
+                    }
+                }
+            }
+
+            for (int x = 0; x < 64; x++)
+            {
+                for (int y = 0; y < 64; y++)
+                {
+                    if (paper[y, x])
+                    {
+                        Console.Write("O");    
+                    }
+                    else Console.Write(".");
+                }
+                Console.WriteLine("");
+            }
+        }
         private static void Day12Puzzle1()
         {
             //string[] lines = System.IO.File.ReadAllLines(@"C:\Users\niklas.hognabba\RiderProjects\AdventOfCode2021\AdventOfCode2021\Day12_Input.txt");
